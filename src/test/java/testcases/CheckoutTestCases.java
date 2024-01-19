@@ -7,7 +7,7 @@ import pages.NavigationPage;
 import utilities.Constants;
 import utilities.ExcelUtility;
 
-public class CartTestCases extends BaseTest {
+public class CheckoutTestCases extends BaseTest {
 
     @DataProvider(name = "checkoutData")
     public Object[][] getCheckoutData() {
@@ -40,8 +40,12 @@ public class CartTestCases extends BaseTest {
         double expectedTotalPrice = cartPage.calculateProductsPrice();
         checkoutPage = cartPage.checkout();
         checkoutPage.submitUserData(firstName, lastName, postalCode);
-        double actualTotalPrice = checkoutPage.getTotalPrice();
+        double actualTotalPrice = checkoutPage.getItemTotalPrice();
         Assert.assertEquals(expectedTotalPrice, actualTotalPrice);
+
+        double expectedPriceWithTax = checkoutPage.calculateTotalPriceAndTax();
+        double actualPriceWithTax = checkoutPage.getTotalPriceWithTax();
+        Assert.assertEquals(expectedPriceWithTax, actualPriceWithTax);
     }
 
     @Test(dataProvider = "checkoutData")
@@ -50,5 +54,21 @@ public class CartTestCases extends BaseTest {
         checkoutPage.submitUserData(firstName, lastName, postalCode);
         checkoutPage.finishShopping();
         Assert.assertTrue(checkoutPage.verifyConfirmationMessageContains("Your order has been dispatched"));
+    }
+
+    @Test(dataProvider = "checkoutData")
+    public void verifyCheckoutErrorMessages(String firstName, String lastName, String postalCode) {
+        checkoutPage = cartPage.checkout();
+        checkoutPage.clickContinue();
+        Assert.assertEquals(checkoutPage.getErrorMessage(), "Error: First Name is required");
+        checkoutPage.sendFirstName(firstName);
+        checkoutPage.clickContinue();
+        Assert.assertEquals(checkoutPage.getErrorMessage(), "Error: Last Name is required");
+        checkoutPage.sendLastName(lastName);
+        checkoutPage.clickContinue();
+        Assert.assertEquals(checkoutPage.getErrorMessage(), "Error: Postal Code is required");
+        checkoutPage.sendPostalCode(postalCode);
+        checkoutPage.clickContinue();
+        Assert.assertTrue(checkoutPage.verifyTitleExists());
     }
 }

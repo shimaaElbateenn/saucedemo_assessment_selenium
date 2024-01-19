@@ -1,8 +1,13 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
 <suite name="Regression Test Suite">
+    <listeners>
+        <listener class-name="base.TestListeners"/>
+    </listeners>
     <test name="Application Test" preserve-order="true">
         <classes>
             <class name="testcases.LoginTests"></class>
+            <class name="testcases.CheckoutTestCases"></class>
+            <class name="testcases.ProductListingTestCases"></class>
         </classes>
     </test>
 </suite>
