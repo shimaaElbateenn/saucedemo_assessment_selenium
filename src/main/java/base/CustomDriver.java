@@ -20,9 +20,6 @@ import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import utilities.Util;
 
-/**
- * @author letskodeit
- */
 public class CustomDriver {
     public WebDriver driver;
     private JavascriptExecutor js;
